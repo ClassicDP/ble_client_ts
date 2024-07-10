@@ -4,6 +4,7 @@ interface MessageBase {
     type: string
     sourceAddress: string
     destinationAddress: string
+    requestUUID: string
 
     [key: string]: any
 }
@@ -12,7 +13,7 @@ let autoincrement = 0;
 
 const reqRegKey: MessageBase = {
     destinationAddress: "", sourceAddress: "",
-    type: 'reqRegKey', key: ""
+    type: 'reqRegKey', key: "", requestUUID: ""
 };
 
 const SERVICE_UUID = 'abcd';
@@ -121,7 +122,8 @@ async function interactWithUniqueCharacteristic(peripheral: noble.Peripheral, un
 
             while (true) {
                 reqRegKey.key = uniqueUUID;
-                reqRegKey.sourceAddress = String(autoincrement);
+                reqRegKey.sourceAddress = "local";
+                reqRegKey.requestUUID = String(autoincrement)
                 const message = JSON.stringify(reqRegKey);
                 console.log('try to send next message')
                 await uniqueCharacteristic.writeAsync(Buffer.from(message), false);
